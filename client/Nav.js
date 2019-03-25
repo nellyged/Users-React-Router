@@ -1,30 +1,28 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Nav = ({ count, nextPage, lastPage, setPage }) => {
+const Nav = ({ count, page }) => {
   const links = [
     {
       title: 'First',
       link: '/',
-      onClick: setPage,
       disabled: count === 0 ? 'disabled' : '',
     },
     {
       title: 'Prev',
       link: `/${count - 1}`,
-      onClick: lastPage,
+      onClick: page,
       disabled: count === 0 ? 'disabled' : '',
     },
     {
       title: 'Next',
       link: `/${count + 1}`,
-      onClick: nextPage,
+      onClick: page,
       disabled: count === 161 ? 'disabled' : '',
     },
     {
       title: 'Last',
       link: '/161',
-      onClick: setPage,
       disabled: count === 161 ? 'disabled' : '',
     },
   ];

@@ -9,58 +9,35 @@ export default class App extends Component {
     this.state = {
       count: 0,
     };
-    this.nextPage = this.nextPage.bind(this);
-    this.lastPage = this.lastPage.bind(this);
+    this.page = this.page.bind(this);
     this.setPage = this.setPage.bind(this);
   }
-  nextPage() {
-    this.setState({ count: this.state.count + 1 });
+  page(ev) {
+    //Each time the user pages we set the count value by grabbing the id from the event listener passed by the link
+    this.setState({
+      count: ev.target.href.slice(ev.target.href.lastIndexOf('/') + 1) * 1,
+    });
   }
-  lastPage() {
-    this.setState({ count: this.state.count - 1 });
-  }
-
   setPage = (id = 0) => {
-    console.log(id);
-    if (id.type === 'click') {
-      console.log(typeof id.target.href);
-      if (id.target.href.split('').includes('162')) {
-        id = 161;
-      } else {
-        id = 0;
-      }
-    }
+    console.log(`set page tapped ${id}`);
     this.setState({ count: parseInt(id) });
   };
   render() {
-    const { users, count } = this.state;
-    const { nextPage, lastPage, setPage } = this;
+    const { count } = this.state;
+    const { page, setPage } = this;
     return (
       <div>
         <HashRouter>
-          <Nav
-            count={count}
-            nextPage={nextPage}
-            lastPage={lastPage}
-            setPage={setPage}
-          />
+          <Nav count={count} page={page} setPage={setPage} />
           <Route
             exact
             path="/"
-            render={({ location, match }) => (
-              <Users location={location} id={0} />
-            )}
+            render={() => <Users id={0} setPage={setPage} />}
           />
           <Route
             path="/:id"
-            render={({ location, match }) => (
-              <Users
-                location={location}
-                nextPage={nextPage}
-                setPage={setPage}
-                count={count}
-                id={match.params.id}
-              />
+            render={({ match }) => (
+              <Users setPage={setPage} id={match.params.id} />
             )}
           />
         </HashRouter>

@@ -8,20 +8,10 @@ export default class Users extends Component {
       users: [],
     };
     this.loadUsers = this.loadUsers.bind(this);
+    //On the initial load we wont get the props, its in the update that we finally get them
   }
-
   componentDidMount() {
-    console.log(this.props);
     this.loadUsers();
-    const { location, id } = this.props;
-    if (id) {
-      this.props.setPage(id);
-    }
-  }
-  componentDidUpdate(prevProps) {
-    if (prevProps.count !== this.props.count) {
-      this.loadUsers();
-    }
   }
   loadUsers() {
     axios
@@ -30,8 +20,21 @@ export default class Users extends Component {
       .then(({ users }) => {
         this.setState({ users });
       });
+    //Set the count each time we do a load to ensure its at the correct value. this also accounts for hard refresh or if the user enters the id manually
+    this.props.setPage(this.props.id);
   }
-
+  componentDidUpdate(prevProps) {
+    console.log('Users Component Updated');
+    console.log(prevProps);
+    console.log(this.props);
+    //Check if the id value changed (which is the count) changed. If so we can update this components state by loading the users
+    if (prevProps.id !== this.props.id) {
+      // console.log('setting state');
+      // this.setState({ users: this.props.users });
+      //this.props.setPage(this.props.id);
+      this.loadUsers();
+    }
+  }
   render() {
     const { users } = this.state;
     return (
